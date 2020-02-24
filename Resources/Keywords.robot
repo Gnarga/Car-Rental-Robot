@@ -1,8 +1,6 @@
 *** Variables ***
-$[{BROWSER}     chrome
+${BROWSER}     chrome
 ${URL}          http://rental3.infotiv.net/
-${VA}
-${}
 
 
 *** Keywords ***
