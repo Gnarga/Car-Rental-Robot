@@ -7,6 +7,8 @@ ${}
 
 *** Keywords ***
 Begin Web Test
-    Open Browser                                ${BROWSER}
+    Open Browser                                ${URL}  ${BROWSER}
     Maximize Browser Window
-    Go To                                       ${URL}
+
+End Web Test
+    Close Browser
