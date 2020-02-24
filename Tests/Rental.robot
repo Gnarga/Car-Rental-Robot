@@ -52,9 +52,14 @@ Book a car, logged in
 Book a car, not logged in
     [Documentation]                     Try to book a car without being logged in
     [Tags]                              BOOK_02
-    Set Selenium Speed                  0.3
     #Vi skippar välja datum för det är tydligen omöjligt, utan nöjer oss låna bilen över aktuella dagen endast
     Click Button                        id:continue
     Wait Until Page Contains Element    id:bookRoadsterpass2
     Click Button                        id:bookRoadsterpass2
     Alert Should Be Present             text=You need to be logged in to continue.
+
+Tidsboking
+    [Tags]                              BOOK_03
+    Input Text                          id:start    03-05
+    Input Text                          id:end      03-16
+    Click Button                        id:continue
