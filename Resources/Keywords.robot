@@ -7,6 +7,7 @@ ${VALID_PASSWORD}               123456
 ${INVALID_PASSWORD}             9999999999
 ${LOGIN_BUTTON}                 id:login
 ${CARD_NUMBER}                  1234567890123456
+${BOOK_TESLA_R}                 id:bookRoadsterpass2
 
 
 *** Keywords ***
@@ -20,14 +21,15 @@ Verify page
 
 End Web Test
     Close Browser
-we are on the homepage
-    page should contain             Login
 
-input the email address and the password
+that the user is on the homepage
+    Page Should Contain Element         ${LOGIN_BUTTON}
+
+input valid mail and invalid password
     Input Text                          id:email  ${VALID_MAIL}
     Input Text                          id:password  ${INVALID_PASSWORD}
 
-we click log in button
+we click the login button
     Click Button                        ${LOGIN_BUTTON}
 
 we shouldn't be able to log in successfully because of wrong password
