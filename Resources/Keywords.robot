@@ -8,6 +8,10 @@ ${INVALID_PASSWORD}             9999999999
 ${LOGIN_BUTTON}                 id:login
 ${CARD_NUMBER}                  1234567890123456
 ${BOOK_TESLA_R}                 id:bookRoadsterpass2
+${BOOK_START}                   id:start
+${BOOK_END}                     id:end
+${START_RESULT}
+${END_RESULT}
 
 
 *** Keywords ***
@@ -22,17 +26,17 @@ Verify page
 End Web Test
     Close Browser
 
-that the user is on the homepage
+that the user is on the right page
     Page Should Contain Element         ${LOGIN_BUTTON}
 
-input valid mail and invalid password
+inputs a valid mail and an invalid password
     Input Text                          id:email  ${VALID_MAIL}
     Input Text                          id:password  ${INVALID_PASSWORD}
 
-we click the login button
+When the user clicks the login button
     Click Button                        ${LOGIN_BUTTON}
 
-we shouldn't be able to log in successfully because of wrong password
+user should not be logged in
     Element Should Contain              id:signInError      Wrong e-mail or password
 
 Log in
@@ -46,3 +50,69 @@ Clean-up
     Handle Alert                        accept
     Page Should Contain                 has been Returned
 
+Click Continue
+    Click Button                        id:continue
+
+Given the user is on the startpage
+    Verify page
+
+user have entered a start date two days from current and end date in 3 days after that
+    ${start_date}                       Get Time     month day  NOW + 2 days
+    ${end_date}                         Get Time     month day  NOW + 5 days
+    Input Text                          ${BOOK_START}    ${start_date}
+    Input Text                          ${BOOK_END}      ${end_date}
+    ${DATE_RESULT}                      Get Value        ${BOOK_START}
+
+click the continue button
+    Click Continue
+
+enter valid credentials and logs in
+    Log in
+    Element Should Contain              id:welcomePhrase    You are signed in as
+
+clicks the book button on the Opel Vivaro
+    Click Button                        id:bookVivaropass9
+
+enter valid card details
+    Input Text                          id:cardNum  ${CARD_NUMBER}
+    Input Text                          id:fullName    Bob Doe
+    Click Element                       xpath://*[@id="confirmSelection"]/form/select[1]
+    Click Element                       id:month6
+    Click Element                       xpath://*[@id="confirmSelection"]/form/select[2]
+    Click Element                       id:month2023
+    Input Text                          id:cvc          123
+
+user press the confirm button
+    Click Button                        id:confirm
+
+a confirmation text of the Opel Vivaro should appear
+    Page Should Contain                 A Opel Vivaro is now ready for pickup
+    Page Should Contain                 ${DATE_RESULT}
+
+afterwards auto-cleanup, removing booked vehicle
+    Clean-up
+
+that user is logged in and book car with set parameters
+    Verify page
+    Log in
+    Element Should Contain              id:welcomePhrase    You are signed in as
+    ${start_date}                       Get Time     month day  NOW
+    ${end_date}                         Get Time     month day  NOW + 6 days
+    Input Text                          ${BOOK_START}    ${start_date}
+    Input Text                          ${BOOK_END}      ${end_date}
+    ${START_RESULT}                     Get Value        ${BOOK_START}
+    ${END_RESULT}                       Get Value        ${BOOK_END}
+    Click Continue
+    Click Button                        id:bookVivaropass9
+    enter valid card details
+    Click Button                        id:confirm
+
+the user gets to his/hers bookings ('My Page')
+    Click Button                        id:mypage
+
+model and dates should be equal to input
+    Page Should Contain                 Opel  Vivaro
+    Element Should Contain              id:startDate1   ${START_RESULT}
+    Element Should Contain              id:endDate1     ${END_RESULT}
+    #Then we clear the data
+    Clean-up

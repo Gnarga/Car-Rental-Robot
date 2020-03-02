@@ -14,19 +14,8 @@ Valid Login
     Click Button                        ${LOGIN_BUTTON}
     Element Should Contain              id:welcomePhrase    You are signed in as
 
-Valid Login, not from homepage
-    [Documentation]                     Test login function with valid inputs, given valid user exist
-    [Tags]                              LOGIN_04
-    Click Button                        id:continue
-    Input Text                          id:email  ${VALID_MAIL}
-    Input Text                          id:password  ${VALID_PASSWORD}
-    Click Button                        ${LOGIN_BUTTON}
-    Element Should Contain              id:welcomePhrase    You are signed in as
-
-    #boka bil från datum som redan varit
-
 Invalid Login, invalid mail w/ valid pass
-    [Documentation]                     Test login funtion with invalid inputs
+    [Documentation]                     Test login funtion with invalid email
     [Tags]                              LOGIN_02
     Input Text                          id:email  ${INVALID_MAIL}
     Input Text                          id:password  ${VALID_PASSWORD}
@@ -34,12 +23,29 @@ Invalid Login, invalid mail w/ valid pass
     Element Should Contain              id:signInError      Wrong e-mail or password
 
 Invalid Login, valid mail w/ invalid pass
-    [Documentation]                     Test login funtion with invalid inputs,with Gherkin syntax
+    [Documentation]                     Test login funtion with invalid password,with Gherkin syntax
     [Tags]                              LOGIN_03
-    Given that the user is on the homepage
-    And input valid mail and invalid password
-    When we click the login button
-    Then we shouldn't be able to log in successfully because of wrong password
+    Given that the user is on the right page
+    And inputs a valid mail and an invalid password
+    When the user clicks the login button
+    Then user should not be logged in
+
+Invalid Login, invalid inputs
+    [Documentation]                     Test login funtion with invalid inputs
+    [Tags]                              LOGIN_04
+    Input Text                          id:email  ${INVALID_MAIL}
+    Input Text                          id:password  ${INVALID_PASSWORD}
+    Click Button                        ${LOGIN_BUTTON}
+    Element Should Contain              id:signInError      Wrong e-mail or password
+
+Valid Login, from car selection page
+    [Documentation]                     Test login function with valid inputs, given valid user exist
+    [Tags]                              LOGIN_05
+    Click Continue
+    Input Text                          id:email  ${VALID_MAIL}
+    Input Text                          id:password  ${VALID_PASSWORD}
+    Click Button                        ${LOGIN_BUTTON}
+    Element Should Contain              id:welcomePhrase    You are signed in as
 
 Book a car, logged in
     [Documentation]                     Book a car with logged in existing user
@@ -47,9 +53,9 @@ Book a car, logged in
     Log in
     ${start_date}                       Get Time     month day  NOW
     ${end_date}                         Get Time     month day  NOW + 9 days
-    Input Text                          id:start    ${start_date}
-    Input Text                          id:end      ${end_date}
-    Click Button                        id:continue
+    Input Text                          ${BOOK_START}    ${start_date}
+    Input Text                          ${BOOK_END}      ${end_date}
+    Click Continue
     Click Button                        ${BOOK_TESLA_R}
     Input Text                          id:cardNum  ${CARD_NUMBER}
     Input Text                          id:fullName    Bob Doe
@@ -65,24 +71,46 @@ Book a car, logged in
 Book a car, not logged in
     [Documentation]                     Try to book a car without being logged in
     [Tags]                              BOOK_02
-    Click Button                        id:continue
+    Click Continue
     Wait Until Page Contains Element    ${BOOK_TESLA_R}
     Click Button                        ${BOOK_TESLA_R}
     Alert Should Be Present             text=You need to be logged in to continue.
 
-Book a car, invalid pre-date
+Book a car, old start date
     [Documentation]                     To make sure we cant book a car from a date thats already been
     [Tags]                              BOOK_03
     ${datepick}                         Get Time     month day  NOW - 1 day
-    Input Text                          id:start      ${datepick}
-    Click Button                        id:continue
+    Input Text                          ${BOOK_START}      ${datepick}
+    Click Continue
     Page Should Contain                 When do you want to make your trip?
 
 Book a car, invalid due date
-    [Documentation]                     To make sure we cant book a car for too long, max 30 days from start date
+    [Documentation]                     To make sure we cant book a car for too long, 1 month from start date
     [Tags]                              BOOK_04
-    ${datepick}                         Get Time     month day  NOW + 31 day
-    Input Text                          id:end      ${datepick}
-    Click Button                        id:continue
+    Set Selenium Speed                  1
+    ${datepick}                         Get Time     month day  NOW + 31 days
+    Input Text                          ${BOOK_END}      ${datepick}
+    Click Continue
     Page Should Contain                 When do you want to make your trip?
+
+Gherkin big test
+    [Documentation]                     A trip around the site
+    [Tags]                              VG_test
+    Given the user is on the startpage
+    And user have entered a start date two days from current and end date in 3 days after that
+    And click the continue button
+    And enter valid credentials and logs in
+    And clicks the book button on the Opel Vivaro
+    And enter valid card details
+    When user press the confirm button
+    Then a confirmation text of the Opel Vivaro should appear
+    And afterwards auto-cleanup, removing booked vehicle
+
+Gherkin, date match
+    [Documentation]                     Correct date for pickup and dropoff,car is Opel Vivaro, startdate is current, end is 6 days
+    [Tags]                              VG_test_01
+    Given that user is logged in and book car with set parameters
+    When the user gets to his/hers bookings ('My Page')
+    Then model and dates should be equal to input
+
 
