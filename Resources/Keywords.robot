@@ -53,26 +53,6 @@ Clean-up
 Click Continue
     Click Button                        id:continue
 
-Given the user is on the startpage
-    Verify page
-
-user have entered a start date two days from current and end date in 3 days after that
-    ${start_date}                       Get Time     month day  NOW + 2 days
-    ${end_date}                         Get Time     month day  NOW + 5 days
-    Input Text                          ${BOOK_START}    ${start_date}
-    Input Text                          ${BOOK_END}      ${end_date}
-    ${DATE_RESULT}                      Get Value        ${BOOK_START}
-
-click the continue button
-    Click Continue
-
-enter valid credentials and logs in
-    Log in
-    Element Should Contain              id:welcomePhrase    You are signed in as
-
-clicks the book button on the Opel Vivaro
-    Click Button                        id:bookVivaropass9
-
 enter valid card details
     Input Text                          id:cardNum  ${CARD_NUMBER}
     Input Text                          id:fullName    Bob Doe
@@ -81,16 +61,6 @@ enter valid card details
     Click Element                       xpath://*[@id="confirmSelection"]/form/select[2]
     Click Element                       id:month2023
     Input Text                          id:cvc          123
-
-user press the confirm button
-    Click Button                        id:confirm
-
-a confirmation text of the Opel Vivaro should appear
-    Page Should Contain                 A Opel Vivaro is now ready for pickup
-    Page Should Contain                 ${DATE_RESULT}
-
-afterwards auto-cleanup, removing booked vehicle
-    Clean-up
 
 that user is logged in and book car with set parameters
     Verify page

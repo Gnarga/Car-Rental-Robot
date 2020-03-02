@@ -88,23 +88,10 @@ Book a car, invalid due date
     [Documentation]                     To make sure we cant book a car for too long, 1 month from start date
     [Tags]                              BOOK_04
     Set Selenium Speed                  1
-    ${datepick}                         Get Time     month day  NOW + 31 days
+    ${datepick}                         Get Time     month day  NOW + 32 days
     Input Text                          ${BOOK_END}      ${datepick}
     Click Continue
     Page Should Contain                 When do you want to make your trip?
-
-Gherkin big test
-    [Documentation]                     A trip around the site
-    [Tags]                              VG_test
-    Given the user is on the startpage
-    And user have entered a start date two days from current and end date in 3 days after that
-    And click the continue button
-    And enter valid credentials and logs in
-    And clicks the book button on the Opel Vivaro
-    And enter valid card details
-    When user press the confirm button
-    Then a confirmation text of the Opel Vivaro should appear
-    And afterwards auto-cleanup, removing booked vehicle
 
 Gherkin, date match
     [Documentation]                     Correct date for pickup and dropoff,car is Opel Vivaro, startdate is current, end is 6 days
